@@ -60,7 +60,7 @@ struct LoginView: View {
 
     private var headline: some View {
         VStack(spacing: 8) {
-            Text("Welcome Back 👋")
+            Text("Welcome Back To FoodTogether 👋")
                 .font(.largeTitle.bold())
                 .foregroundColor(.white)
             Text("Log in to continue")
