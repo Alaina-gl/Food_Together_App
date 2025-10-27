@@ -9,9 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
 
-    @State private var navigateToHome = false
-    @State private var email = ""
-    @State private var password = ""
+    @State private var viewModel = LoginViewModel()
 
     var body: some View {
         NavigationStack {
@@ -28,40 +26,34 @@ struct LoginView: View {
                     VStack(spacing: 46) {
                         headline
                         emailPassword
+                        if let error = viewModel.errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
+                        }
                         loginButton
                     }
                     .padding(.horizontal, 24)
                     .padding(.vertical, 50)
                 }
             }
-            .navigationDestination(isPresented: $navigateToHome) {
+            .navigationDestination(isPresented: $viewModel.isLoggedIn) {
                 HomeView()
             }
         }
     }
 
     private var loginButton: some View {
-        Button(action: {
-            if !email.isEmpty && !password.isEmpty {
-                navigateToHome = true
-            }
-        }) {
-            Text("Log In")
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.blue)
-                .cornerRadius(12)
-                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
+        Button("Login") {
+            Task { await viewModel.login() }
         }
-        .padding(.horizontal)
+        .frame(maxWidth: .infinity)
+        .buttonStyle(.borderedProminent)
     }
 
     private var headline: some View {
         VStack(spacing: 8) {
             Text("Welcome Back To FoodTogether 👋")
-                .font(.largeTitle.bold())
+                .font(.title.bold())
                 .foregroundColor(.white)
             Text("Log in to continue")
                 .font(.subheadline)
@@ -71,9 +63,10 @@ struct LoginView: View {
 
     private var emailPassword: some View {
         VStack(spacing: 16) {
-            TextField("Email", text: $email)
+            TextField("Email", text: $viewModel.email)
                 .textFieldStyle(.roundedBorder)
-            SecureField("Password", text: $password)
+                .autocapitalization(.none)
+            SecureField("Password", text: $viewModel.password)
                 .textFieldStyle(.roundedBorder)
         }
         .padding(.horizontal, 24)
