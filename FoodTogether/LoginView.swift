@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginView: View {
 
     @State private var viewModel = LoginViewModel()
+    @State private var createAccount = false
 
     var body: some View {
         NavigationStack {
@@ -31,6 +32,7 @@ struct LoginView: View {
                                 .foregroundColor(.red)
                         }
                         loginButton
+                        createAccountButton
                     }
                     .padding(.horizontal, 24)
                     .padding(.vertical, 50)
@@ -39,7 +41,17 @@ struct LoginView: View {
             .navigationDestination(isPresented: $viewModel.isLoggedIn) {
                 HomeView()
             }
+            .navigationDestination(isPresented: $createAccount) {
+                CreateAccountView()
+            }
         }
+    }
+
+    private var createAccountButton: some View {
+        Button("Create an Account") {
+            createAccount = true
+        }
+        .buttonStyle(.borderedProminent)
     }
 
     private var loginButton: some View {

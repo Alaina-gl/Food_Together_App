@@ -1,0 +1,24 @@
+disabled_rules:
+  - line_length           # allow long lines
+  - force_unwrapping      # allow ! usage
+  - trailing_newline
+  - type_name
+
+opt_in_rules:
+  - empty_count
+  - sorted_imports
+  - vertical_whitespace
+
+included:
+  - MyApp
+  - MyFramework
+
+excluded:
+  - Carthage
+  - Pods
+  - .git
+  - build
+
+# Only keep rules with valid configuration
+trailing_whitespace:
+  ignores_empty_lines: false
