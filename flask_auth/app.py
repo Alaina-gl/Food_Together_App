@@ -42,6 +42,15 @@ def create_user(email, password):
     conn.commit()
     conn.close()
 
+# --- Debug helper ---
+def fetch_all_users():
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, email FROM users")  # only return safe info
+    users = cursor.fetchall()
+    conn.close()
+    return users
+
 # --- Routes ---
 
 @app.route("/register", methods=["POST"])
@@ -86,4 +95,10 @@ def profile():
 
 
 if __name__ == "__main__":
+    # Debug: Print all users in the database at startup
+    users = fetch_all_users()
+    print("----- All users: ------")
+    for user_id, email in users:
+        print(f"ID: {user_id}, Email: {email}")
+    print("----- End of users ------")
     app.run(debug=True)
