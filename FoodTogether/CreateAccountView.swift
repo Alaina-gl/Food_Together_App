@@ -25,12 +25,12 @@ struct CreateAccountView: View {
                     .padding()
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(10)
-                
+
                 SecureField("Password", text: $viewModel.password)
                     .padding()
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(10)
-                
+
                 SecureField("Confirm Password", text: $viewModel.confirmPassword)
                     .padding()
                     .background(Color(.secondarySystemBackground))

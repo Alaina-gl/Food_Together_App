@@ -4,8 +4,8 @@
 //
 //  Created by Alaina Ge on 2025-10-26.
 //
-import SwiftUI
 import Foundation
+import SwiftUI
 
 @MainActor @Observable
 class CreateAccountViewModel {
@@ -28,40 +28,54 @@ class CreateAccountViewModel {
             return
         }
 
-        var request = URLRequest(url: registerURL)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let body: [String: String] = ["email": email, "password": password]
-        request.httpBody = try? JSONEncoder().encode(body)
+        let request = makePostRequest(url: registerURL, body: ["email": email, "password": password])
 
         Task {
             do {
                 let (data, response) = try await URLSession.shared.data(for: request)
-                
                 guard let httpResponse = response as? HTTPURLResponse else {
                     throw URLError(.badServerResponse)
                 }
-
                 switch httpResponse.statusCode {
                 case 201:
-                    successMessage = "Account created successfully"
+                    successMessage = parseResponseMessage(from: data) ?? "Account created successfully"
                     errorMessage = nil
 
                 case 400:
-                    if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                       let message = json["error"] as? String {
-                        errorMessage = message
-                    } else {
-                        errorMessage = "Something went wrong"
-                    }
+                    errorMessage = parseResponseMessage(from: data) ?? "Something went wrong"
+                    successMessage = nil
 
                 default:
                     errorMessage = "Something went wrong"
+                    successMessage = nil
                 }
             } catch {
                 errorMessage = "Network error: \(error.localizedDescription)"
+                successMessage = nil
             }
         }
+    }
+
+    private func makePostRequest(url: URL, body: [String: String]) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try? JSONEncoder().encode(body)
+        return request
+    }
+
+    private func parseResponseMessage(from data: Data) -> String? {
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return nil
+        }
+
+        // Try both "message" (success) and "error" (failure)
+        if let message = json["message"] as? String {
+            return message
+        } else if let error = json["error"] as? String {
+            return error
+        }
+
+        return nil
     }
 }

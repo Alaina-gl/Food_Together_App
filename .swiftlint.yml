@@ -1,24 +1,31 @@
 disabled_rules:
-  - line_length           # allow long lines
-  - force_unwrapping      # allow ! usage
-  - trailing_newline
-  - type_name
+  - trailing_whitespace
+  - line_length
 
 opt_in_rules:
   - empty_count
+  - force_unwrapping
+  - closure_spacing
   - sorted_imports
   - vertical_whitespace
 
 included:
-  - MyApp
-  - MyFramework
+  - FoodTogether
+  - flask_auth
 
 excluded:
-  - Carthage
   - Pods
-  - .git
-  - build
 
-# Only keep rules with valid configuration
-trailing_whitespace:
-  ignores_empty_lines: false
+line_length:
+  warning: 120
+  error: 140
+
+identifier_name:
+  min_length: 3
+  excluded:
+    - id
+    - x
+    - y
+
+type_name:
+  max_length: 50
