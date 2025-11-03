@@ -8,3 +8,9 @@ password: mypassword
 
 email: test@gmail.com
 password: 000000
+
+email: test@gmail.om
+password: 000000
+
+email: test1@gmail.com
+password: 000000

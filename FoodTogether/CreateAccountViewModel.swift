@@ -42,17 +42,22 @@ class CreateAccountViewModel {
                 guard let httpResponse = response as? HTTPURLResponse else {
                     throw URLError(.badServerResponse)
                 }
-                
-                if httpResponse.statusCode == 200 {
+
+                switch httpResponse.statusCode {
+                case 201:
                     successMessage = "Account created successfully"
                     errorMessage = nil
-                } else {
+
+                case 400:
                     if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                       let message = json["message"] as? String {
+                       let message = json["error"] as? String {
                         errorMessage = message
                     } else {
                         errorMessage = "Something went wrong"
                     }
+
+                default:
+                    errorMessage = "Something went wrong"
                 }
             } catch {
                 errorMessage = "Network error: \(error.localizedDescription)"
