@@ -1,5 +1,30 @@
+# FoodTogether iOS Application
 
-Mock data base can be added locally via creating a users.db to store login details
+Welcome to **FoodTogether**, an iOS application where users can find friends and decide on a food option based on everyone's preferences.
+
+---
+
+## Features
+
+- Connect with friends
+- Share and vote on food preferences
+- Decide on a meal collectively
+
+---
+
+## Setup
+
+### Installing SwiftLint
+
+To format your Swift code using SwiftLint, run:
+
+```bash
+swiftlint lint --fix
+```
+
+#### Mock Database
+
+You can add mock data locally by creating a local users.db file to store login details.
 
 test accounts in local users.db:
 
@@ -14,3 +39,15 @@ password: 000000
 
 email: test1@gmail.com
 password: 000000
+
+---
+
+## Usage
+
+Clone the repository.
+
+Open the project in Xcode.
+
+Run the app on a simulator or physical device.
+
+Use the test accounts above to log in and explore the app features.
