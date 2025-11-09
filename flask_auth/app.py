@@ -34,6 +34,14 @@ def find_user(email):
     conn.close()
     return user
 
+def find_user_by_id(user_id): # not used currently
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE id=?", (user_id,))
+    user = cursor.fetchone()
+    conn.close()
+    return user
+
 def create_user(email, password):
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
@@ -88,11 +96,11 @@ def login():
 @jwt_required()
 def profile():
     current_user = get_jwt_identity()
-    return jsonify({
-        "email": current_user,
-        "message": f"Welcome back, {current_user}!"
-    }), 200
-
+    current_user = find_user(current_user)
+    if not current_user:
+        return jsonify({"error": "User not found"}), 404
+    current_user = current_user[1]  # get email
+    return jsonify({"message": f"Welcome back, {current_user}!"}), 200
 
 if __name__ == "__main__":
     # Debug: Print all users in the database at startup

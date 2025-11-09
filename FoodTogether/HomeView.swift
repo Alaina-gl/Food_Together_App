@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
 
     @State private var isPressed = false
+    @State private var viewModel = HomeViewVM()
 
     var body: some View {
         ZStack {
@@ -21,6 +22,8 @@ struct HomeView: View {
             )
             .ignoresSafeArea()
             VStack {
+                title
+                Spacer()
                 addButton
                 Text("New Group!")
                     .font(.system(size: 24, weight: .bold, design: .rounded))
@@ -29,8 +32,26 @@ struct HomeView: View {
                     .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
                     .scaleEffect(isPressed ? 0.95 : 1.0)
                     .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isPressed)
+                Spacer()
             }
+            .padding(16)
         }
+        .task {
+            await viewModel.fetchCurrentUserInfo()
+        }
+    }
+
+    private var title: some View {
+        let text: String
+        if let message = viewModel.message {
+            text = message
+        } else {
+            text = "Welcome back!"
+        }
+        return Text(text)
+            .foregroundColor(.white)
+            .font(.title)
+            .bold()
     }
 
     private var addButton: some View {
@@ -54,4 +75,8 @@ struct HomeView: View {
             }
         }
     }
+}
+
+#Preview {
+    HomeView()
 }
